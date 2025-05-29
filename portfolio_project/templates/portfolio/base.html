@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мое портфолио</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'portfolio/bootstrap.min.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% include 'portfolio/partial_nav.html' %}
+    
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                {% load portfolio_tags %}
+                {% show_categories %}
+                {% show_tags %}
+                <div class="portfolio-count">
+                    Всего проектов: {% portfolio_count %}
+                </div>
+            </div>
+            <div class="col-md-9">
+                {% block content %}{% endblock %}
+                {% block pagination%}
+                    <!-- Пагинация -->
+                    {% if page_obj.has_other_pages %}
+                    <nav class="list-pages">
+                        <ul>
+                            {% if page_obj.has_previous %}
+                            <li class="page-num">
+                                <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+                            </li>
+                            {% endif %}
+                            {% for p in paginator.page_range %}
+                                {% if p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+                                    {% if page_obj.number == p %}
+                                    <li class="page-num page-num-selected">{{ p }}</li>
+                                    {% else %}
+                                    <li class="page-num">
+                                        <a href="?page={{ p }}">{{ p }}</a>
+                                    </li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                            <li class="page-num">
+                                <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                {% endblock%}
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'portfolio/jquery-3.5.1.min.js' %}"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

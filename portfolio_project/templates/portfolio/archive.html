@@ -1,0 +1,26 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1>Архив за {{ year }} год</h1>
+  
+  {% if items %}
+    <ul class="list-group">
+      {% for item in items %}
+        <li class="list-group-item">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+          {% if item.image %}
+            <img src="{{ item.image.url }}" alt="{{ item.title }}" width="200">
+          {% endif %}
+          <p><small>Создано: {{ item.created_at }}</small></p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Нет записей за {{ year }} год.</p>
+  {% endif %}
+  
+  <a href="{% url 'portfolio:portfolio_list' %}" class="btn btn-primary mt-3">Вернуться на главную</a>
+</div>
+{% endblock %}

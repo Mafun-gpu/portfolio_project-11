@@ -1,0 +1,25 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1>{{ item.title }}</h1>
+  <p><strong>Описание:</strong> {{ item.description }}</p>
+  
+  {% if item.image %}
+    <img src="{{ item.image.url }}" alt="{{ item.title }}" style="max-width: 400px;">
+  {% endif %}
+  
+  <p><strong>Категория:</strong> <a href="{% url 'portfolio:category_detail' item.category.slug %}">{{ item.category.name }}</a></p>
+  <p><strong>Теги:</strong>
+    {% for tag in item.tags.all %}
+      <a href="{% url 'portfolio:tag_detail' tag.slug %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+    {% empty %}
+      Нет тегов
+    {% endfor %}
+  </p>
+  <p><strong>Клиент:</strong> {% if item.client %}{{ item.client.name }}{% else %}Не указан{% endif %}</p>
+  <p><em>Дата создания: {{ item.created_at|date:"d-m-Y H:i" }}</em></p>
+  <p><em>Дата обновления: {{ item.updated_at|date:"d-m-Y H:i" }}</em></p>
+  <a href="{% url 'portfolio:portfolio_list' %}" class="btn btn-secondary">Вернуться</a>
+</div>
+{% endblock %}

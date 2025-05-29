@@ -1,0 +1,14 @@
+{% if categories %}
+<ul class="list-group mb-3">
+  {% if not selected_cat_slug %}
+    <li class="list-group-item active">Все категории</li>
+  {% else %}
+    <li class="list-group-item"><a href="{% url 'portfolio:portfolio_list' %}">Все категории</a></li>
+  {% endif %}
+  {% for cat in categories %}
+    <li class="list-group-item {% if cat.slug == selected_cat_slug %}active{% endif %}">
+      <a href="{% url 'portfolio:category_detail' cat.slug %}">{{ cat.name }}</a>
+    </li>
+  {% endfor %}
+</ul>
+{% endif %}

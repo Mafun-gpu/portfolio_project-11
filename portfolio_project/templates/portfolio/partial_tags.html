@@ -1,0 +1,10 @@
+{% if tags %}
+<p>Теги:</p>
+<ul class="list-group mb-3">
+  {% for tag in tags %}
+    <li class="list-group-item">
+      <a href="{% url 'portfolio:tag_detail' tag.slug %}">{{ tag.name }}</a>
+    </li>
+  {% endfor %}
+</ul>
+{% endif %}

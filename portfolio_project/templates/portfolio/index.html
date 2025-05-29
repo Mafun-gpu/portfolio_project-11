@@ -1,0 +1,85 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Портфолио</h1>
+    
+    <!-- Информация о портфолио -->
+    <p>Всего элементов: {{ item_count }}</p>
+    <p>Есть элементы: {{ has_items }}</p>
+    {% if first_item %}
+        <p>Первый элемент: {{ first_item.title }}</p>
+    {% endif %}
+    {% if last_item %}
+        <p>Последний элемент: {{ last_item.title }}</p>
+    {% endif %}
+
+    <!-- Кнопка для создания нового элемента портфолио -->
+    <button type="button" class="btn btn-primary mb-3" id="create-portfolio" data-url="{% url 'portfolio:portfolio_create' %}">
+        Добавить портфолио
+    </button>
+
+    <!-- Список элементов портфолио -->
+    <div id="portfolio-list">
+        {% include 'portfolio/partial_portfolio_list.html' %}
+    </div>
+
+    <!-- Модальное окно для форм -->
+    <div class="modal fade" id="modal-portfolio" tabindex="-1" role="dialog" aria-labelledby="modal-portfolio-label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <!-- Содержимое формы будет загружаться сюда через AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(function () {
+    var loadForm = function () {
+        var btn = $(this);
+        $.ajax({
+            url: btn.attr("data-url"),
+            type: 'get',
+            dataType: 'json',
+            beforeSend: function () {
+                $("#modal-portfolio").modal("show");
+            },
+            success: function (data) {
+                $("#modal-portfolio .modal-content").html(data.html_form);
+            }
+        });
+    };
+
+    var saveForm = function () {
+        var form = $(this);
+        $.ajax({
+            url: form.attr("action"),
+            data: new FormData(form[0]),
+            type: form.attr("method"),
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.form_is_valid) {
+                    $("#portfolio-list").html(data.html_portfolio_list);
+                    $("#modal-portfolio").modal("hide");
+                } else {
+                    $("#modal-portfolio .modal-content").html(data.html_form);
+                }
+            }
+        });
+        return false;
+    };
+
+    $("#create-portfolio").click(loadForm);
+    $("#modal-portfolio").on("submit", ".js-portfolio-create-form", saveForm);
+    $("#portfolio-list").on("click", ".js-update-portfolio", loadForm);
+    $("#modal-portfolio").on("submit", ".js-portfolio-update-form", saveForm);
+    $("#portfolio-list").on("click", ".js-delete-portfolio", loadForm);
+    $("#modal-portfolio").on("submit", ".js-portfolio-delete-form", saveForm);
+});
+</script>
+{% endblock %}

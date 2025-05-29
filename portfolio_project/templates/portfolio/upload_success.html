@@ -1,0 +1,9 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Файл успешно загружен</h1>
+    <p>Путь к файлу: {{ file_path }}</p>
+    <a href="{% url 'portfolio:portfolio_list' %}" class="btn btn-primary">Вернуться на главную</a>
+</div>
+{% endblock %}
