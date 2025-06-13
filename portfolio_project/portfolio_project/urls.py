@@ -31,6 +31,7 @@ admin.site.site_title = "Админ-панель портфолио"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('users/', include('users.urls', namespace='users')),
     path('', include('portfolio.urls', namespace='portfolio')),
 ]
 

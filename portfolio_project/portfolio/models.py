@@ -88,6 +88,9 @@ class PortfolioItem(models.Model):
     class Meta:
         verbose_name = 'Элемент портфолио'
         verbose_name_plural = 'Элементы портфолио'
+        permissions = [
+            ("can_publish", "Может публиковать элементы"),
+        ]
 
     objects = models.Manager()
     published = PublishedManager()
